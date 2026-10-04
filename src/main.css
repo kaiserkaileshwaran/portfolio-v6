@@ -1,0 +1,286 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-primary);
+  --font-heading: var(--font-primary);
+}
+
+/* 
+  BULLETPROOF VISIBILITY & THEME ENGINE 
+  No opacity tricks. Absolute contrast.
+*/
+
+:root {
+  --font-primary: "Times New Roman", Times, serif;
+  --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  --card-bg: rgba(0, 0, 0, 0.7);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --global-text: #ffffff;
+  --global-muted: #cccccc;
+  --hero-glow: rgba(0, 0, 0, 0.8);
+}
+
+body[data-theme="sunrise"] {
+  /* Real Sunrise: Sky blue blending into bright morning orange */
+  --bg-gradient: linear-gradient(135deg, #87ceeb 0%, #ffb75e 50%, #ed8f03 100%);
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --card-border: rgba(0, 0, 0, 0.1);
+  --global-text: #000000;
+  --global-muted: #222222;
+  --hero-glow: rgba(255, 255, 255, 0.8);
+}
+
+body[data-theme="day"] {
+  /* Real Day: Clear, bright sky blue to soft cyan */
+  --bg-gradient: linear-gradient(135deg, #e0f7fa 0%, #81d4fa 50%, #4fc3f7 100%);
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --card-border: rgba(0, 0, 0, 0.1);
+  --global-text: #000000;
+  --global-muted: #333333;
+  --hero-glow: rgba(255, 255, 255, 0.8);
+}
+
+body[data-theme="sunset"] {
+  /* Real Sunset: Deep twilight blue into crimson and vibrant purple */
+  --bg-gradient: linear-gradient(135deg, #2c3e50 0%, #e74c3c 50%, #8e44ad 100%);
+  --card-bg: rgba(0, 0, 0, 0.65);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --global-text: #ffffff;
+  --global-muted: #dddddd;
+  --hero-glow: rgba(0, 0, 0, 0.8);
+}
+
+body[data-theme="night"] {
+  /* Real Night: Deep space indigo to pitch black */
+  --bg-gradient: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
+  --card-bg: rgba(10, 10, 15, 0.8);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --global-text: #ffffff;
+  --global-muted: #bbbbbb;
+  --hero-glow: rgba(0, 0, 0, 0.8);
+}
+
+body {
+  margin: 0;
+  /* Background is now handled by fixed layers in App.jsx for smooth transitions! */
+  background-color: #000000;
+  color: var(--global-text);
+  font-family: var(--font-primary);
+  font-style: italic;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* CSS Crossfade Background Architecture */
+.bg-layer {
+  position: fixed;
+  pointer-events: none;
+  z-index: -100;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+.bg-default {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+.sunrise-bg {
+  background: linear-gradient(135deg, #87ceeb 0%, #ffb75e 50%, #ed8f03 100%);
+}
+.day-bg {
+  background: linear-gradient(135deg, #e0f7fa 0%, #81d4fa 50%, #4fc3f7 100%);
+}
+.sunset-bg {
+  background: linear-gradient(135deg, #2c3e50 0%, #e74c3c 50%, #8e44ad 100%);
+}
+.night-bg {
+  background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+/* Initial load default */
+:root .bg-default {
+  opacity: 1;
+}
+/* Theme active states */
+body[data-theme="sunrise"] .sunrise-bg {
+  opacity: 1;
+  z-index: 1;
+}
+body[data-theme="day"] .day-bg {
+  opacity: 1;
+  z-index: 1;
+}
+body[data-theme="sunset"] .sunset-bg {
+  opacity: 1;
+  z-index: 1;
+}
+body[data-theme="night"] .night-bg {
+  opacity: 1;
+  z-index: 1;
+}
+
+/* Bulletproof text visibility override */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a,
+div,
+button {
+  color: var(--global-text);
+  transition:
+    color 1.5s ease-in-out,
+    background-color 1.5s ease-in-out,
+    border-color 1.5s ease-in-out,
+    box-shadow 1.5s ease-in-out;
+}
+
+.theme-active-btn {
+  background-color: var(--global-text);
+  color: var(--card-bg) !important;
+}
+
+.text-muted-force {
+  color: var(--global-muted) !important;
+}
+
+/* Clean, crisp card design (No smoky/messy glass) */
+.theme-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.8s ease;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+  font-family: var(--font-primary);
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background-color: var(--global-text);
+  color: var(--card-bg);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Custom Modal Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(150, 150, 150, 0.3);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(150, 150, 150, 0.5);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for timeline */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Custom Admin Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--global-text);
+  border-radius: 10px;
+  opacity: 0.5;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--textMain);
+}
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+
+/* Global Scrollbar Theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--card-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--global-text);
+  border-radius: 5px;
+  border: 2px solid var(--card-bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--textMain);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--global-text) var(--card-bg);
+}
+
+@keyframes slideFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.animate-slide-fade-in {
+  opacity: 0;
+  animation: slideFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Smart text masking for 3D background readability */
+:is(h1, h2, h3, h4, h5, h6, p, li):not(
+  .theme-card *,
+  button *,
+  .no-mask *,
+  header *
+) {
+  text-shadow:
+    0 1px 15px var(--global-bg),
+    0 2px 30px var(--global-bg),
+    0 4px 50px var(--global-bg);
+}
